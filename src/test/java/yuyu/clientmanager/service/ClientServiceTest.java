@@ -18,12 +18,15 @@ public class ClientServiceTest {
     @Mock
     private ClientDatabase mockClientDatabase;
 
+    @Mock
+    private BirthNumberConverter mockConverter;
+
     private ClientService clientService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        clientService = new ClientService(mockClientDatabase);
+        clientService = new ClientService(mockClientDatabase, mockConverter);
     }
 
     @Test
@@ -33,10 +36,12 @@ public class ClientServiceTest {
         List<Client> mockClients = new ArrayList<>();
         mockClients.add(client1);
         mockClients.add(client2);
+        ClientService spyClientService = spy(clientService);
 
         when(mockClientDatabase.getClients()).thenReturn(mockClients);
+        doNothing().when(spyClientService).fillAge(anyList());
 
-        List<Client> result = clientService.getAllClients();
+        List<Client> result = spyClientService.getAllClients();
 
         assertEquals(2, result.size());
         verify(mockClientDatabase, times(1)).getClients();
@@ -118,10 +123,6 @@ public class ClientServiceTest {
     @Test
     public void testFindClientsSurnameNotFound() {
         Client searchCriteria = new Client("", "", "Novák");
-        Client client1 = new Client("7310054125", "Josef", "Novák");
-        client1.setDatabaseId(1);
-        List<Client> expectedList = new ArrayList<>();
-        expectedList.add(client1);
         ClientService spyClientService = spy(clientService);
 
         when(spyClientService.findClientsByNameAndSurname(searchCriteria)).thenReturn(new ArrayList<>());

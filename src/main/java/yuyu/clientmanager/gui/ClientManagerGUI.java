@@ -1,8 +1,8 @@
 package yuyu.clientmanager.gui;
 
 import org.springframework.stereotype.Component;
-import yuyu.clientmanager.database.ClientDatabase;
 import yuyu.clientmanager.model.Client;
+import yuyu.clientmanager.service.BirthNumberConverter;
 import yuyu.clientmanager.service.ClientService;
 
 import javax.swing.*;
@@ -16,8 +16,14 @@ import java.util.regex.Pattern;
 
 @Component
 public class ClientManagerGUI {
-    private final ClientService clientService = new ClientService(new ClientDatabase());
-    private final Logger logger = Logger.getLogger(ClientManagerGUI.class.getName());
+    private final ClientService clientService;
+    private final BirthNumberConverter birthNumberConverter;
+    private static final Logger logger = Logger.getLogger(ClientManagerGUI.class.getName());
+
+    public ClientManagerGUI(ClientService clientService, BirthNumberConverter birthNumberConverter) {
+        this.clientService = clientService;
+        this.birthNumberConverter = birthNumberConverter;
+    }
 
     public void launchGUI() {
         JFrame frame = createFrame();
@@ -228,14 +234,14 @@ public class ClientManagerGUI {
         return inputPanel;
     }
 
-    public static boolean isInvalidBirthNumber(String birthNumber) {
+    public boolean isInvalidBirthNumber(String birthNumber) {
         String regex = "^\\d{6}[/-]?\\d{4}$";
         Pattern pattern = Pattern.compile(regex);
         if (!pattern.matcher(birthNumber).matches()) {
             return true;
         }
         try {
-            LocalDate date = ClientService.birthNumberToLocalDate(birthNumber);
+            LocalDate date = birthNumberConverter.birthNumberToLocalDate(birthNumber);
             return false;
         } catch (DateTimeException e) {
             return true;

@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 public class ClientService {
 
     private final ClientDatabase clientDatabase;
+    private final BirthNumberConverter converter;
     private static final Logger logger = Logger.getLogger(ClientService.class.getName());
 
-    public ClientService(ClientDatabase clientDatabase) {
+    public ClientService(ClientDatabase clientDatabase, BirthNumberConverter birthNumberConverter) {
         this.clientDatabase = clientDatabase;
+        this.converter = birthNumberConverter;
     }
 
     public List<Client> getAllClients() {
@@ -105,27 +107,9 @@ public class ClientService {
         clientList.forEach(client -> client.setAge(calculateAge(client.getBirthNumber())));
     }
 
-    static int calculateAge(String birthNumber) {
-        LocalDate birthDate = birthNumberToLocalDate(birthNumber);
+    int calculateAge(String birthNumber) {
+        LocalDate birthDate = converter.birthNumberToLocalDate(birthNumber);
         long age = ChronoUnit.YEARS.between(birthDate, LocalDate.now());
         return (int) age;
-    }
-
-    public static LocalDate birthNumberToLocalDate(String birthNumber) {
-        int year = Integer.parseInt(birthNumber.substring(0, 2));
-        int month = Integer.parseInt(birthNumber.substring(2, 4));
-        int day = Integer.parseInt(birthNumber.substring(4, 6));
-
-        if (year <= 54) {
-            year += 2000;
-        } else {
-            year += 1900;
-        }
-
-        if (month > 50) {
-            month -= 50;
-        }
-
-        return LocalDate.of(year, month, day);
     }
 }

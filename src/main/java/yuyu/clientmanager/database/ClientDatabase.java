@@ -12,18 +12,11 @@ import java.util.logging.Logger;
 @Repository
 public class ClientDatabase {
 
-    private final Map<Integer, Client> clientsById;
-    private final Map<String, Client> clientsByBirthNumber;
-    private final List<Client> clients;
-    private static int lastID;
+    private final Map<Integer, Client> clientsById = new HashMap<>();
+    private final Map<String, Client> clientsByBirthNumber = new HashMap<>();
+    private final List<Client> clients = new ArrayList<>();
+    private static int lastID = 0;
     private static final Logger logger = Logger.getLogger(ClientDatabase.class.getName());
-
-    public ClientDatabase() {
-        clientsById = new HashMap<>();
-        clientsByBirthNumber = new HashMap<>();
-        clients = new ArrayList<>();
-        lastID = 0;
-    }
 
     public List<Client> getClients() {
         logger.info("Returning all clients.");
