@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
+    private static final Logger logger = Logger.getLogger(ClientService.class.getName());
 
     private final ClientDatabase clientDatabase;
     private final BirthNumberConverter converter;
-    private static final Logger logger = Logger.getLogger(ClientService.class.getName());
 
     public ClientService(ClientDatabase clientDatabase, BirthNumberConverter birthNumberConverter) {
         this.clientDatabase = clientDatabase;

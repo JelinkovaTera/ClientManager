@@ -16,9 +16,10 @@ import java.util.regex.Pattern;
 
 @Component
 public class ClientManagerGUI {
+    private static final Logger logger = Logger.getLogger(ClientManagerGUI.class.getName());
+
     private final ClientService clientService;
     private final BirthNumberConverter birthNumberConverter;
-    private static final Logger logger = Logger.getLogger(ClientManagerGUI.class.getName());
 
     public ClientManagerGUI(ClientService clientService, BirthNumberConverter birthNumberConverter) {
         this.clientService = clientService;
@@ -30,44 +31,55 @@ public class ClientManagerGUI {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
 
-        JButton addClientButton = new JButton("Add Client");
-        JButton findClientButton = new JButton("Find Client");
-        JButton deleteClientButton = new JButton("Delete Client");
-        JButton showAllButton = new JButton("Show All");
-
-        panel.add(addClientButton);
-        panel.add(findClientButton);
-        panel.add(deleteClientButton);
-        panel.add(showAllButton);
-
         JTable clientTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(clientTable);
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        addClientButton.addActionListener(e -> {
+        panel.add(createAddButton(clientTable));
+        panel.add(createFindButton(clientTable));
+        panel.add(createDeleteButton(clientTable));
+        panel.add(createShowAllButton(clientTable));
+
+        frame.add(panel, BorderLayout.NORTH);
+        frame.setVisible(true);
+    }
+
+    private JButton createAddButton(JTable clientTable) {
+        JButton addButton = new JButton("Add Client");
+        addButton.addActionListener(e -> {
             logger.info("Add Client button clicked.");
             addClient();
             showResults(clientTable, clientService.getAllClients());
         });
+        return addButton;
+    }
 
-        findClientButton.addActionListener(e -> {
+    private JButton createFindButton(JTable clientTable) {
+        JButton findButton = new JButton("Find Client");
+        findButton.addActionListener(e -> {
             logger.info("Find Client button clicked.");
             findClient(clientTable);
         });
+        return findButton;
+    }
 
-        deleteClientButton.addActionListener(e -> {
+    private JButton createDeleteButton(JTable clientTable) {
+        JButton deleteButton = new JButton("Delete Client");
+        deleteButton.addActionListener(e -> {
             logger.info("Delete Client button clicked.");
             deleteClient();
             showResults(clientTable, clientService.getAllClients());
         });
+        return deleteButton;
+    }
 
-        showAllButton.addActionListener(e -> {
+    private JButton createShowAllButton(JTable clientTable) {
+        JButton showButton = new JButton("Show All");
+        showButton.addActionListener(e -> {
             logger.info("Show All button clicked.");
             showResults(clientTable, clientService.getAllClients());
         });
-
-        frame.add(panel, BorderLayout.NORTH);
-        frame.setVisible(true);
+        return showButton;
     }
 
     private void addClient() {
