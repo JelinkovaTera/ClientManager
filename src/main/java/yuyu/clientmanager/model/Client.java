@@ -2,10 +2,10 @@ package yuyu.clientmanager.model;
 
 public class Client {
     private int databaseId;
-    private String birthNumber;
+    private final String birthNumber;
     private int age;
-    private String name;
-    private String surname;
+    private final String name;
+    private final String surname;
 
     public Client(String birthNumber, String name, String surname) {
         this.birthNumber = birthNumber;
@@ -25,10 +25,6 @@ public class Client {
         return birthNumber;
     }
 
-    public void setBirthNumber(String birthNumber) {
-        this.birthNumber = birthNumber;
-    }
-
     public int getAge() {
         return age;
     }
@@ -41,16 +37,8 @@ public class Client {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSurname() {
         return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     @Override

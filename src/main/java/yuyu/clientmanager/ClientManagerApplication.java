@@ -1,7 +1,8 @@
 package yuyu.clientmanager;
 
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import yuyu.clientmanager.gui.ClientManagerGUI;
 
@@ -11,8 +12,10 @@ import javax.swing.*;
 public class ClientManagerApplication {
 
     public static void main(String[] args) {
-        System.setProperty("java.awt.headless", "false");
-        ConfigurableApplicationContext context = SpringApplication.run(ClientManagerApplication.class, args);
+        ConfigurableApplicationContext context = new SpringApplicationBuilder(ClientManagerApplication.class)
+                .headless(false)
+                .web(WebApplicationType.NONE)
+                .run(args);
         SwingUtilities.invokeLater(() -> context.getBean(ClientManagerGUI.class).launchGUI());
     }
 }
